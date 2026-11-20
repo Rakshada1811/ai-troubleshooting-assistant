@@ -1,0 +1,196 @@
+[
+  {
+    "id": "KB001",
+    "title": "Payment API returning HTTP 500",
+    "symptoms": "payment api 500 error, internal server error, transactions failing, payment request fails, payment service error, checkout failing",
+    "checks": [
+      "Check application logs for stack traces around the failure time",
+      "Check if the database is reachable and the connection pool is not exhausted",
+      "Check downstream dependencies such as the bank gateway or auth service",
+      "Check if a deployment or config change happened recently"
+    ],
+    "resolution": "If a recent deployment caused it, roll back. If the DB pool is exhausted, fix leaked connections and restart the service. If a downstream service is down, enable fallback and escalate to that team.",
+    "team": "L2 Application Support, then L3 Technical Engineering"
+  },
+  {
+    "id": "KB002",
+    "title": "Database connection pool exhausted",
+    "symptoms": "too many connections, connection timeout, cannot get connection from pool, database connection failures, db connection errors, application hangs on database calls",
+    "checks": [
+      "Check active vs max connections on the database",
+      "Look for long running or blocked queries",
+      "Check the application for connections that are not being closed",
+      "Check for a sudden traffic spike"
+    ],
+    "resolution": "Kill blocked sessions, tune the pool size, and fix connection leaks in code then redeploy.",
+    "team": "L3 Technical Engineering and DBA team"
+  },
+  {
+    "id": "KB003",
+    "title": "High API latency or timeouts",
+    "symptoms": "api slow, response time high, request timeout, gateway timeout 504, latency spike, pages loading slowly, slow response",
+    "checks": [
+      "Check the APM dashboard for slow endpoints",
+      "Check CPU and memory on application servers",
+      "Check database query times",
+      "Check network latency between services"
+    ],
+    "resolution": "Scale out the service, optimise the slow query, or increase the timeout only as a temporary measure.",
+    "team": "L2 Application Support, Infrastructure Operations if resource related"
+  },
+  {
+    "id": "KB004",
+    "title": "Disk space full on server",
+    "symptoms": "no space left on device, disk full, log files huge, service crashed writing to disk, disk usage 100 percent, storage alert",
+    "checks": [
+      "Run df on the server to find the full mount",
+      "Find large files with du on that mount",
+      "Check that log rotation is working",
+      "Check for core dumps or temp file buildup"
+    ],
+    "resolution": "Archive or delete old logs, fix log rotation, and extend the volume if needed.",
+    "team": "Infrastructure Operations"
+  },
+  {
+    "id": "KB005",
+    "title": "SSL certificate expired",
+    "symptoms": "certificate expired, ssl error, https not working, handshake failure, certificate verify failed, browser shows not secure warning",
+    "checks": [
+      "Check the certificate expiry date with openssl",
+      "Check which service or load balancer holds the certificate",
+      "Check if the auto renewal job failed"
+    ],
+    "resolution": "Renew and install the certificate, restart or reload the service, and fix the renewal automation.",
+    "team": "Infrastructure Operations and Security team"
+  },
+  {
+    "id": "KB006",
+    "title": "Failed deployment or release",
+    "symptoms": "deployment failed, pipeline failed, release broke application, build failed, service not starting after release, ci cd failure",
+    "checks": [
+      "Check the CI/CD pipeline logs for the failing stage",
+      "Check application startup logs",
+      "Compare config and environment variables with the last good release",
+      "Check dependency or version mismatches"
+    ],
+    "resolution": "Roll back to the last good release, fix the failing stage, then redeploy.",
+    "team": "DevOps and Cloud Engineering"
+  },
+  {
+    "id": "KB007",
+    "title": "High CPU usage on server",
+    "symptoms": "cpu 100 percent, high cpu usage, server very slow, cpu alert, load average high, process consuming cpu",
+    "checks": [
+      "Identify the top process using CPU with top",
+      "Check if a runaway job, loop or batch process is running",
+      "Check for a traffic spike on the monitoring dashboard",
+      "Check if a recent release changed behaviour"
+    ],
+    "resolution": "Stop or restart the runaway process, scale out if load is genuine, and raise a ticket for the code fix if a release caused it.",
+    "team": "Infrastructure Operations, then L3 Technical Engineering"
+  },
+  {
+    "id": "KB008",
+    "title": "Memory leak or out of memory errors",
+    "symptoms": "out of memory, oom killed, memory usage keeps growing, java heap space error, service restarts randomly, memory alert",
+    "checks": [
+      "Check memory trend on the monitoring dashboard",
+      "Check system logs for OOM killer messages",
+      "Check application heap settings and recent code changes",
+      "Check if restarts line up with memory hitting the limit"
+    ],
+    "resolution": "Restart the service to restore availability, increase memory limits as a temporary step, and raise a problem ticket for developers to find the leak.",
+    "team": "L3 Technical Engineering"
+  },
+  {
+    "id": "KB009",
+    "title": "Authentication or login failures",
+    "symptoms": "401 unauthorized, 403 forbidden, login failed, users cannot sign in, invalid token, token expired, authentication error",
+    "checks": [
+      "Check the auth service health and logs",
+      "Check if tokens or API keys have expired",
+      "Check clock sync between services",
+      "Check for recent changes to permissions, secrets or identity provider settings"
+    ],
+    "resolution": "Renew expired tokens or secrets, fix the permission change, and restart the auth service if it is unhealthy.",
+    "team": "L2 Application Support and Security team"
+  },
+  {
+    "id": "KB010",
+    "title": "Message queue backlog",
+    "symptoms": "queue backlog, messages piling up, consumer lag, events not processed, queue depth high, delayed processing, kafka lag",
+    "checks": [
+      "Check queue depth and consumer lag on the dashboard",
+      "Check if consumers are running and healthy",
+      "Check consumer logs for repeated errors or poison messages",
+      "Check if the downstream system is slow"
+    ],
+    "resolution": "Restart or scale consumers, move poison messages to a dead letter queue, and fix the downstream slowness.",
+    "team": "L2 Application Support, then L3 Technical Engineering"
+  },
+  {
+    "id": "KB011",
+    "title": "DNS or network connectivity issue",
+    "symptoms": "cannot reach service, connection refused, host not found, dns resolution failed, network unreachable, packet loss, connection reset",
+    "checks": [
+      "Ping the target and check DNS resolution with nslookup",
+      "Check firewall and security group rules",
+      "Check if the target service is listening on the expected port",
+      "Check for recent network or DNS changes"
+    ],
+    "resolution": "Fix the DNS record or firewall rule, and restore the service port. Escalate to the network team if the problem is between sites.",
+    "team": "Infrastructure Operations and Network team"
+  },
+  {
+    "id": "KB012",
+    "title": "Bank or third party gateway unavailable",
+    "symptoms": "bank gateway down, third party api not responding, upstream service unavailable, 502 bad gateway, 503 service unavailable, partner api failing, payment gateway timeout",
+    "checks": [
+      "Check the third party status page or partner contact channel",
+      "Check connectivity and certificates to the partner endpoint",
+      "Check error rates by partner on the dashboard",
+      "Check if the circuit breaker or retry logic has kicked in"
+    ],
+    "resolution": "Enable the fallback or retry path where available, inform the business of customer impact, and escalate to the partner using the agreed contact process.",
+    "team": "L2 Application Support and Partner Integration team"
+  },
+  {
+    "id": "KB013",
+    "title": "Transaction reconciliation or settlement mismatch",
+    "symptoms": "reconciliation mismatch, settlement file missing, transaction count does not match, duplicate transactions, missing transactions, settlement delayed",
+    "checks": [
+      "Compare transaction counts between the application and the settlement file",
+      "Check if the batch or file generation job ran successfully",
+      "Check for failed or stuck transactions in the database",
+      "Check for duplicate processing caused by retries"
+    ],
+    "resolution": "Rerun the failed batch job, correct the stuck records through the approved process, and share the mismatch report with the business team.",
+    "team": "L2 Application Support and Finance Operations"
+  },
+  {
+    "id": "KB014",
+    "title": "Pod or container crash loop",
+    "symptoms": "crashloopbackoff, pod restarting, container keeps restarting, kubernetes pod not ready, imagepullbackoff, container exited",
+    "checks": [
+      "Check pod status with kubectl get pods",
+      "Check pod logs and previous container logs",
+      "Check events with kubectl describe pod",
+      "Check resource limits, image name and config or secret references"
+    ],
+    "resolution": "Fix the config, image or resource limit causing the crash, then redeploy. Roll back the release if it started after a deployment.",
+    "team": "DevOps and Cloud Engineering"
+  },
+  {
+    "id": "KB015",
+    "title": "Backup job failed",
+    "symptoms": "backup failed, backup job error, backup not completed, restore point missing, backup storage full, scheduled backup missed",
+    "checks": [
+      "Check the backup job logs for the error message",
+      "Check free space on the backup target",
+      "Check credentials and network access to the backup location",
+      "Check the last successful backup time"
+    ],
+    "resolution": "Fix the cause, rerun the backup manually, and confirm that it completes. Report any gap in backup coverage.",
+    "team": "Infrastructure Operations"
+  }
+]
