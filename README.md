@@ -33,7 +33,8 @@ All data is simulated. No production systems are accessed.
 - Also integrated and tested, but not used in the demo: OpenRouter (free Gemma
   model) and Ollama (`llama3.2:3b`).
 - Development: I used Claude to help plan the architecture, write, and debug the
-  code. I ran and tested the prototype myself, compared the four LLM providers, and chose the final setup from the results.
+  code. I ran and tested the prototype myself, compared the four LLM providers,
+  and chose the final setup from the results.
 
 ## Setup
 
@@ -66,7 +67,6 @@ without calling an LLM.
 
 Failover was observed in practice: when Groq returned a rate limit error, Gemini
 answered the same query.
-
 
 ## Handling unknown issues
 
