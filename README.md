@@ -67,8 +67,6 @@ without calling an LLM.
 Failover was observed in practice: when Groq returned a rate limit error, Gemini
 answered the same query.
 
-Harder queries written in my own words: [add your 5 to 6 queries and what each
-matched, including any that failed].
 
 ## Handling unknown issues
 
