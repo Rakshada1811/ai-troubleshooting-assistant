@@ -32,10 +32,8 @@ All data is simulated. No production systems are accessed.
   (`gemini-3.5-flash-lite`) as backup.
 - Also integrated and tested, but not used in the demo: OpenRouter (free Gemma
   model) and Ollama (`llama3.2:3b`).
-- Development: I used Claude to help plan the architecture, write and debug the
-  code, and draft documentation. [Add what you personally did: wrote the
-  knowledge base entries, chose the thresholds, ran and analysed the tests, and
-  so on.] I reviewed and can explain every part of the code.
+- Development: I used Claude to help plan the architecture, write, and debug the
+  code. I ran and tested the prototype myself, compared the four LLM providers, and chose the final setup from the results.
 
 ## Setup
 
